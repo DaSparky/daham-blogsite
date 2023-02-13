@@ -13,7 +13,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from forms import CreatePostForm, RegisterForm, LoginForm, CommentForm
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = '8jhBXox7C0sKR6b'
+app.config['SECRET_KEY'] = os.environ['SECRETKEY']
 ckeditor = CKEditor(app)
 Bootstrap(app)
 
@@ -190,7 +190,7 @@ def contact():
         with smtplib.SMTP("smtp.zoho.com", port=587) as connection:
             connection.starttls()
             connection.login(user=my_mail, password=my_pass)
-            connection.sendmail(from_addr=my_mail, to_addrs="daham31con@gmail.com",
+            connection.sendmail(from_addr=my_mail, to_addrs=os.environ['GMAIL'],
                                 msg=f"Subject:Feedback BlogTest site"
                                     f"\n\n{user_feedback}")
         return render_template("contact.html", msg_sent=True)
