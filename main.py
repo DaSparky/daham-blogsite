@@ -18,7 +18,7 @@ ckeditor = CKEditor(app)
 Bootstrap(app)
 
 # CONNECT TO DB
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', "sqlite:///blog.db")
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
@@ -96,7 +96,8 @@ def admin_only(f):
 
 @app.route('/')
 def get_all_posts():
-    print(current_user)
+    db.create_all()
+
     posts = BlogPost.query.all()
     return render_template("index.html", all_posts=posts)
 
@@ -183,7 +184,6 @@ def about():
 
 
 @app.route("/contact", methods=['GET', 'POST'])
-@login_required
 def contact():
     if request.method == 'POST':
         user_feedback = f"Name: {request.form['name']}\nEmail: {request.form['email']}\nMessage: {request.form['message']}"
